@@ -1,0 +1,40 @@
+.mainBox{
+    margin: auto;
+    border-radius: 30px;
+    box-shadow: 0px 0px 2px rgb(0, 0, 0);
+    text-align: center;
+    padding: 20px;
+    width: 40%;
+}
+
+.mainBox button{
+    background-color: rgb(128, 11, 122);
+    color: white;
+    padding: 10px 20px 10px 20px;
+    margin: 15px;
+    border-radius: 10px;
+    border: none;
+    box-shadow: 0px 0px 1px rgb(0, 0, 0);
+}
+
+.mainBox button:active{
+    transform: scale(0.95, 0.95);
+}
+
+.title{
+    font-size: 18;
+    font-weight: bold;
+    text-align: center;
+}
+
+.info{
+    margin: 8px;
+}
+
+.loading{
+    text-align: center;
+    font-size: 16;
+    margin: 10px;
+    font-weight: bold;
+    font-style: italic;
+}
