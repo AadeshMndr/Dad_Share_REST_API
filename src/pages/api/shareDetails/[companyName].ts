@@ -25,10 +25,11 @@ const reqHandler = async (req: NextApiRequest, res: NextApiResponse) => {
   );
 
   const high = Number(
-    highLowSpan?.textContent?.split("\n")[1].split("-")[0].trim()
+    highLowSpan?.textContent?.split("\n")[1].split("-")[0].trim().split("").filter( (char) => char !== "," ).join("")
   );
+
   const low = Number(
-    highLowSpan?.textContent?.split("\n")[1].split("-")[1].trim()
+    highLowSpan?.textContent?.split("\n")[1].split("-")[1].trim().split("").filter( (char) => char !== "," ).join("")
   );
 
   const halfYearAvgSpan = document.querySelector(
@@ -36,7 +37,7 @@ const reqHandler = async (req: NextApiRequest, res: NextApiResponse) => {
   );
 
   const halfYearAvgData = Number(
-    halfYearAvgSpan?.textContent?.split("\n")[1].trim()
+    halfYearAvgSpan?.textContent?.split("\n")[1].trim().split("").filter( (char) => char !== "," ).join("")
   );
 
   const nameSpan = document.querySelector("body > div:nth-child(3) > div > section.main-content > div:nth-child(3) > div > div > div > div.company-list > div:nth-child(1) > div > h1");
