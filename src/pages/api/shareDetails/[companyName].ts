@@ -44,7 +44,7 @@ const reqHandler = async (req: NextApiRequest, res: NextApiResponse) => {
 
   const companyName = nameSpan?.textContent;
 
-  res.status(200).json({ high, low, halfYearAvgData, companyName });
+  res.status(200).json({ high: high || 0, low: low || 0, halfYearAvgData: halfYearAvgData || 0, companyName });
 };
 
 export default reqHandler;
