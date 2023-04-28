@@ -100,6 +100,7 @@ const reqHandler = async (req: NextApiRequest, res: NextApiResponse) => {
         .filter((char) => char !== ",")
         .join("")
     );
+    
 
     return {
       high: high || 0,
@@ -108,6 +109,8 @@ const reqHandler = async (req: NextApiRequest, res: NextApiResponse) => {
       companyName,
     };
   });
+
+  await browser.close();
 
   res.status(200).json({
     high: high || 0,
