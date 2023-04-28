@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
 
-import { JSDOM } from "jsdom";
+// import { JSDOM } from "jsdom";
 
 import puppeteer from "puppeteer";
 
@@ -55,7 +55,7 @@ const reqHandler = async (req: NextApiRequest, res: NextApiResponse) => {
 
   //Using puppeteer
 
-  const browser = await puppeteer.launch({ headless: "new" });
+  const browser = await puppeteer.launch({ headless: true });
 
   const page = await browser.newPage();
 
