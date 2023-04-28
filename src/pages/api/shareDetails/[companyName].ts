@@ -46,75 +46,75 @@ const reqHandler = async (req: NextApiRequest, res: NextApiResponse) => {
 
   const companyName = nameSpan?.textContent;
 
+  //Using puppeteer
+
+  const browser = await puppeteer.launch({ headless: "new" });
+
+  const page = await browser.newPage();
+
+  const responseObj = await page.goto(url);
+
+  if (!responseObj?.ok() || responseObj === null) {
+    res.status(404).json("Not Found!");
+    return;
+  }
+
+  const data = await page.evaluate(() => {
+    const companyName = document.querySelector(
+      "body > div:nth-child(3) > div > section.main-content > div:nth-child(3) > div > div > div > div.company-list > div:nth-child(1) > div > h1"
+    )?.textContent;
+
+    const highLowSpan = document.querySelector(
+      "body > div:nth-child(3) > div > section.main-content > div:nth-child(3) > div > div > div > div.company-list > div:nth-child(2) > div.col-md-7.col-sm-7.col-xs-12 > div > div.col-md-12 > div:nth-child(3) > span:nth-child(1)"
+    );
+
+    const high = Number(
+      highLowSpan?.textContent
+        ?.split("\n")[1]
+        .split("-")[0]
+        .trim()
+        .split("")
+        .filter((char) => char !== ",")
+        .join("")
+    );
+
+    const low = Number(
+      highLowSpan?.textContent
+        ?.split("\n")[1]
+        .split("-")[1]
+        .trim()
+        .split("")
+        .filter((char) => char !== ",")
+        .join("")
+    );
+
+    const halfYearAvgSpan = document.querySelector(
+      "body > div:nth-child(3) > div > section.main-content > div:nth-child(3) > div > div > div > div.company-list > div:nth-child(2) > div.col-md-7.col-sm-7.col-xs-12 > div > div.col-md-12 > div:nth-child(3) > span.padding-second.pd-sm-fx"
+    );
+
+    const halfYearAvgData = Number(
+      halfYearAvgSpan?.textContent
+        ?.split("\n")[1]
+        .trim()
+        .split("")
+        .filter((char) => char !== ",")
+        .join("")
+    );
+
+    return {
+      high: high || 0,
+      low: low || 0,
+      halfYearAvgData: halfYearAvgData || 0,
+      companyName,
+    };
+  });
+
   res.status(200).json({
     high: high || 0,
     low: low || 0,
     halfYearAvgData: halfYearAvgData || 0,
     companyName,
   });
-
-  //Using puppeteer
-
-  // const browser = await puppeteer.launch({ headless: "new" });
-
-  // const page = await browser.newPage();
-
-  // const responseObj = await page.goto(url);
-
-  // if (!responseObj?.ok() || responseObj === null) {
-  //   res.status(404).json("Not Found!");
-  //   return;
-  // }
-
-  // const data = await page.evaluate(() => {
-  //   const companyName = document.querySelector(
-  //     "body > div:nth-child(3) > div > section.main-content > div:nth-child(3) > div > div > div > div.company-list > div:nth-child(1) > div > h1"
-  //   )?.textContent;
-
-  //   const highLowSpan = document.querySelector(
-  //     "body > div:nth-child(3) > div > section.main-content > div:nth-child(3) > div > div > div > div.company-list > div:nth-child(2) > div.col-md-7.col-sm-7.col-xs-12 > div > div.col-md-12 > div:nth-child(3) > span:nth-child(1)"
-  //   );
-
-  //   const high = Number(
-  //     highLowSpan?.textContent
-  //       ?.split("\n")[1]
-  //       .split("-")[0]
-  //       .trim()
-  //       .split("")
-  //       .filter((char) => char !== ",")
-  //       .join("")
-  //   );
-
-  //   const low = Number(
-  //     highLowSpan?.textContent
-  //       ?.split("\n")[1]
-  //       .split("-")[1]
-  //       .trim()
-  //       .split("")
-  //       .filter((char) => char !== ",")
-  //       .join("")
-  //   );
-
-  //   const halfYearAvgSpan = document.querySelector(
-  //     "body > div:nth-child(3) > div > section.main-content > div:nth-child(3) > div > div > div > div.company-list > div:nth-child(2) > div.col-md-7.col-sm-7.col-xs-12 > div > div.col-md-12 > div:nth-child(3) > span.padding-second.pd-sm-fx"
-  //   );
-
-  //   const halfYearAvgData = Number(
-  //     halfYearAvgSpan?.textContent
-  //       ?.split("\n")[1]
-  //       .trim()
-  //       .split("")
-  //       .filter((char) => char !== ",")
-  //       .join("")
-  //   );
-
-  //   return {
-  //     high: high || 0,
-  //     low: low || 0,
-  //     halfYearAvgData: halfYearAvgData || 0,
-  //     companyName,
-  //   };
-  // });
 
   // res.status(200).json(data);
 
