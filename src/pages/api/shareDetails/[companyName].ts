@@ -109,118 +109,120 @@ const reqHandler = async (req: NextApiRequest, res: NextApiResponse) => {
     };
   });
 
+  res.status(200).json(data);
+
   //going into the Financials Tab
 
-  await page.waitForSelector("#btn_cqtrreport");
+  // await page.waitForSelector("#btn_cqtrreport");
 
-  await page.evaluate(() => {
-    const a = document.querySelector<HTMLAnchorElement>("#btn_cqtrreport");
-    if (a) {
-      a.click();
-    }
-  });
+  // await page.evaluate(() => {
+  //   const a = document.querySelector<HTMLAnchorElement>("#btn_cqtrreport");
+  //   if (a) {
+  //     a.click();
+  //   }
+  // });
 
-  await page.waitForSelector("#keymetrics");
+  // await page.waitForSelector("#keymetrics");
 
-  const tab1Data = await page.evaluate(() => {
-    const data = Array.from(
-      document.querySelectorAll("#keymetrics > div > table > tbody > tr") || []
-    ).map((elem) => {
-      const text = elem.textContent;
+  // const tab1Data = await page.evaluate(() => {
+  //   const data = Array.from(
+  //     document.querySelectorAll("#keymetrics > div > table > tbody > tr") || []
+  //   ).map((elem) => {
+  //     const text = elem.textContent;
 
-      return {
-        title: text?.split("\n")[1].trim(),
-        value: text?.split("\n")[2].trim(),
-      };
-    });
+  //     return {
+  //       title: text?.split("\n")[1].trim(),
+  //       value: text?.split("\n")[2].trim(),
+  //     };
+  //   });
 
-    return data;
-  });
+  //   return data;
+  // });
 
-  const tab2Data = await page.evaluate(() => {
-    const tab = document.querySelector("#keyratios");
-    if (tab !== null) {
-      const rows = document.querySelectorAll(
-        "#keyratios > div > table > tbody > tr"
-      );
+  // const tab2Data = await page.evaluate(() => {
+  //   const tab = document.querySelector("#keyratios");
+  //   if (tab !== null) {
+  //     const rows = document.querySelectorAll(
+  //       "#keyratios > div > table > tbody > tr"
+  //     );
 
-      const data = Array.from(rows).map((elem) => {
-        const text = elem.textContent;
+  //     const data = Array.from(rows).map((elem) => {
+  //       const text = elem.textContent;
 
-        return {
-          title: text?.split("\n")[1].trim(),
-          value: text?.split("\n")[2].trim(),
-        };
-      });
+  //       return {
+  //         title: text?.split("\n")[1].trim(),
+  //         value: text?.split("\n")[2].trim(),
+  //       };
+  //     });
 
-      return data;
-    } else {
-      return [];
-    }
-  });
+  //     return data;
+  //   } else {
+  //     return [];
+  //   }
+  // });
 
-  await browser.close();
+  // await browser.close();
 
-  const records: { title: string | undefined; value: string | undefined }[] = [
-    ...tab1Data,
-    ...tab2Data,
-  ];
+  // const records: { title: string | undefined; value: string | undefined }[] = [
+  //   ...tab1Data,
+  //   ...tab2Data,
+  // ];
 
-  const eps = records.reduce((acc: string | undefined, { title, value }) => {
-    if (
-      title?.toUpperCase() ===
-        "Basic Earnings Per Share(Annualized EPS)".toUpperCase() ||
-      title?.toUpperCase() ===
-        "Earnings Per Share (EPS Annualized -Rs.)".toUpperCase()
-    ) {
-      return value;
-    } else if (
-      title?.toUpperCase().includes("Earnings Per Share".toUpperCase()) &&
-      acc === undefined
-    ) {
-      return value;
-    } else {
-      return acc;
-    }
-  }, undefined);
+  // const eps = records.reduce((acc: string | undefined, { title, value }) => {
+  //   if (
+  //     title?.toUpperCase() ===
+  //       "Basic Earnings Per Share(Annualized EPS)".toUpperCase() ||
+  //     title?.toUpperCase() ===
+  //       "Earnings Per Share (EPS Annualized -Rs.)".toUpperCase()
+  //   ) {
+  //     return value;
+  //   } else if (
+  //     title?.toUpperCase().includes("Earnings Per Share".toUpperCase()) &&
+  //     acc === undefined
+  //   ) {
+  //     return value;
+  //   } else {
+  //     return acc;
+  //   }
+  // }, undefined);
 
-  const PE_ratio = records.reduce(
-    (acc: string | undefined, { title, value }) => {
-      if (
-        title?.toUpperCase() === "P/E Ratio".toUpperCase() ||
-        title?.toUpperCase() ===
-          "Price to Earning Ratio (PE ratio - times)".toUpperCase()
-      ) {
-        return value;
-      } else if (
-        (title?.toUpperCase().includes("PE ratio".toUpperCase()) ||
-          title?.toUpperCase().includes("P/E ratio".toUpperCase())) &&
-        acc === undefined
-      ) {
-        return value;
-      } else {
-        return acc;
-      }
-    },
-    undefined
-  );
+  // const PE_ratio = records.reduce(
+  //   (acc: string | undefined, { title, value }) => {
+  //     if (
+  //       title?.toUpperCase() === "P/E Ratio".toUpperCase() ||
+  //       title?.toUpperCase() ===
+  //         "Price to Earning Ratio (PE ratio - times)".toUpperCase()
+  //     ) {
+  //       return value;
+  //     } else if (
+  //       (title?.toUpperCase().includes("PE ratio".toUpperCase()) ||
+  //         title?.toUpperCase().includes("P/E ratio".toUpperCase())) &&
+  //       acc === undefined
+  //     ) {
+  //       return value;
+  //     } else {
+  //       return acc;
+  //     }
+  //   },
+  //   undefined
+  // );
 
-  const actualEps = eps
-    ? Number(eps
-        .trim()
-        .split("")
-        .filter((char) => char !== ",")
-        .join(""))
-    : 0;
+  // const actualEps = eps
+  //   ? Number(eps
+  //       .trim()
+  //       .split("")
+  //       .filter((char) => char !== ",")
+  //       .join(""))
+  //   : 0;
 
-  const actualPE_ratio = PE_ratio
-    ? Number(PE_ratio.trim()
-        .split("")
-        .filter((char) => char !== ",")
-        .join(""))
-    : 0;
+  // const actualPE_ratio = PE_ratio
+  //   ? Number(PE_ratio.trim()
+  //       .split("")
+  //       .filter((char) => char !== ",")
+  //       .join(""))
+  //   : 0;
 
-  res.status(200).json({ ...data, eps: actualEps, PE_ratio: actualPE_ratio });
+  // res.status(200).json({ ...data, eps: actualEps, PE_ratio: actualPE_ratio });
 };
 
 export default reqHandler;
