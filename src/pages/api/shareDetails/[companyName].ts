@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
 
-import playwright from "playwright-core";
+import puppeteer from "puppeteer";
 
 
 // import { JSDOM } from "jsdom";
@@ -14,13 +14,11 @@ const reqHandler = async (req: NextApiRequest, res: NextApiResponse) => {
 
   //Using puppeteer
 
-  const browser = await playwright.chromium.launch({
-    args: ['--font-render-hinting=none'], // This way fix rendering issues with specific fonts
+  const browser = await puppeteer.launch({
+    args: ['--no-sandbox', '--disable-setuid-sandbox'],
   });
 
-  const context = await browser.newContext();
-
-  const page = await context.newPage();
+  const page = await browser.newPage();
 
   const responseObj = await page.goto(url);
 
@@ -82,12 +80,16 @@ const reqHandler = async (req: NextApiRequest, res: NextApiResponse) => {
 
   //going into the Financials Tab
 
+  await page.waitForSelector("#btn_cqtrreport");
+
   await page.evaluate(() => {
     const a = document.querySelector<HTMLAnchorElement>("#btn_cqtrreport");
     if (a) {
       a.click();
     }
   });
+
+  await page.waitForSelector("#keymetrics");
 
   const tab1Data = await page.evaluate(() => {
     const data = Array.from(
