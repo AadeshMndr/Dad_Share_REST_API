@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
 
-import playwright from "playwright";
+import playwright from "playwright-core";
 
 
 // import { JSDOM } from "jsdom";
